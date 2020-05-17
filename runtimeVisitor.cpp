@@ -25,14 +25,13 @@ antlrcpp::Any runtimeVisitor::visitOut(tinycParser::OutContext *ctx) {
         int value = visitExpr(ctx->expr());
         cout << value << endl;
     }
-    else {
+    else if(ctx->STRING() != NULL){
         cout << ctx->STRING()->getText() <<endl;
     }
     return NULL;
 }
 
 antlrcpp::Any runtimeVisitor::visitInput(tinycParser::InputContext *ctx) {
-    // TODO: implementa la lettura dell'input da tastiera
     // il metodo deve ritornare un valore intero
     int value = 0;
     cin >> value;
