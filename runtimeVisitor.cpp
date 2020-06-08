@@ -26,7 +26,8 @@ antlrcpp::Any runtimeVisitor::visitOut(tinycParser::OutContext *ctx) {
         cout << value << endl;
     }
     else if(ctx->STRING() != NULL){
-        cout << ctx->STRING()->getText() <<endl;
+        string text = ctx->STRING()->getText();
+        cout << text.substr(1, text.length()-2) <<endl;
     }
     return NULL;
 }
