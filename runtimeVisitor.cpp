@@ -47,7 +47,7 @@ antlrcpp::Any runtimeVisitor::visitBranch(tinycParser::BranchContext *ctx) {
         // se guardia vera, esegue ramo then
         visitProgram(ctx->program(0));
     } 
-    else if(ctx->program().size() > 1) {
+    else if(ctx->program(1)) {
         visitProgram(ctx->program(1));
     }
     return NULL;
@@ -127,18 +127,17 @@ antlrcpp::Any runtimeVisitor::visitGuard(tinycParser::GuardContext *ctx) {
     else if(ctx->AND()) return visitGuard(ctx->guard(0)).as<bool>() && visitGuard(ctx->guard(1)).as<bool>();
     else if(ctx->OR()) return visitGuard(ctx->guard(0)).as<bool>() || visitGuard(ctx->guard(1)).as<bool>();
     else if(ctx->relation()) return visitRelation(ctx->relation()).as<bool>();
-    else if(ctx->children[0]->getText() == "(") return visitGuard(ctx->guard(0)).as<bool>();
-    return true; 
+    else return visitGuard(ctx->guard(0)).as<bool>();
 }
 
 antlrcpp::Any runtimeVisitor::visitRelation(tinycParser::RelationContext *ctx) {
     // il metodo ritorna true se il confronto è vero, false altrimenti
-    if(ctx->LT()) return visitExpr(ctx->expr(0)).as<int>() < visitExpr(ctx->expr(1)).as<int>();
-    else if(ctx->LEQ()) return visitExpr(ctx->expr(0)).as<int>() <= visitExpr(ctx->expr(1)).as<int>(); // ERRORE
-    else if(ctx->EQ()) return visitExpr(ctx->expr(0)).as<int>() == visitExpr(ctx->expr(1)).as<int>();
+    if(ctx->LT())       return visitExpr(ctx->expr(0)).as<int>() <  visitExpr(ctx->expr(1)).as<int>();
+    else if(ctx->LEQ()) return visitExpr(ctx->expr(0)).as<int>() <= visitExpr(ctx->expr(1)).as<int>();
+    else if(ctx->EQ())  return visitExpr(ctx->expr(0)).as<int>() == visitExpr(ctx->expr(1)).as<int>();
     else if(ctx->NEQ()) return visitExpr(ctx->expr(0)).as<int>() != visitExpr(ctx->expr(1)).as<int>();
     else if(ctx->GEQ()) return visitExpr(ctx->expr(0)).as<int>() >= visitExpr(ctx->expr(1)).as<int>();
-    else if(ctx->GT()) return visitExpr(ctx->expr(0)).as<int>() > visitExpr(ctx->expr(1)).as<int>();
-    return true;
+    else if(ctx->GT())  return visitExpr(ctx->expr(0)).as<int>() >  visitExpr(ctx->expr(1)).as<int>();
+    return false;
 }
 
